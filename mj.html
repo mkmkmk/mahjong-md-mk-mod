@@ -416,8 +416,35 @@
 		}
 	}
 
+    function toggleFullScreen() {
+        if(document.fullscreenElement) {
+
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+                // safari
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) {
+                // IE11
+                document.msExitFullscreen();
+            }
+        }
+        else {
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen();
+            } else if (document.documentElement.webkitRequestFullscreen) {
+                // safari
+                document.documentElement.webkitRequestFullscreen();
+            } else if (document.documentElement.msRequestFullscreen) {
+                // IE11
+                document.documentElement.msRequestFullscreen();
+            }
+        }
+    }
+
 </script>
 
+<button onclick="toggleFullScreen()">full screen</button>
 <button onclick="undoLastMove()">undo</button>
 <button onclick="showAvail()">show</button>
 <div id="div1"></div>
