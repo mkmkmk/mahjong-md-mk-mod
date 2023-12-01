@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<style>
+
+	html {
+		background-image: url("assets/back.jpg");
+	}
+	
+	body {
+		margin: 0px;
+	}
+
+	#div1 {
+		position: absolute;
+		display: block;
+	}
+	
+	@keyframes blinking {
+        0% { filter: brightness(1) }
+		10% { filter: brightness(.9) }
+		20% { filter: brightness(.8) }
+		30% { filter: brightness(.7) }
+		40% { filter: brightness(.6) }
+		50% { filter: brightness(.5) }
+		60% { filter: brightness(.6) }
+		70% { filter: brightness(.7) }
+		80% { filter: brightness(.8) }
+		90% { filter: brightness(.9) }
+        100% { filter: brightness(1) }
+    }
+	
+</style>
+
+</head>
+<body onload="mahjong()">
+
+<script type="text/javascript">
+
+	
+	let tw = 100;
+	let th = 120;
+	let tileSpacing = 13;
+	
+	let selectedTile = -1;
+	
+	const tiles = [
+		"b1","b2","b3","b4","b5","b6","b7","b8","b9",
+		"b1","b2","b3","b4","b5","b6","b7","b8","b9",
+		"b1","b2","b3","b4","b5","b6","b7","b8","b9",
+		"b1","b2","b3","b4","b5","b6","b7","b8","b9",
+		"c1","c2","c3","c4","c5","c6","c7","c8","c9",
+		"c1","c2","c3","c4","c5","c6","c7","c8","c9",
+		"c1","c2","c3","c4","c5","c6","c7","c8","c9",
+		"c1","c2","c3","c4","c5","c6","c7","c8","c9",
+		"d1","d2","d3","d4","d5","d6","d7","d8","d9",
+		"d1","d2","d3","d4","d5","d6","d7","d8","d9",
+		"d1","d2","d3","d4","d5","d6","d7","d8","d9",
+		"d1","d2","d3","d4","d5","d6","d7","d8","d9",
+		"dr","dg","dw",
+		"dr","dg","dw",
+		"dr","dg","dw",
+		"dr","dg","dw",
+		"we","ws","ww","wn", 
+		"we","ws","ww","wn", 
+		"we","ws","ww","wn", 
+		"we","ws","ww","wn",
+		"s_sp", "s_su", "s_a", "s_w",
+		"f_p", "f_o", "f_c", "f_b"
+	];
+		
+		
+		/*
+		0-11
+		12-19
+		20-29
+		30
+		31-42
+		43-54
+		55,56
+		57-66
+		67-74
+		75-86
+		---
+		87-92
+		93-98
+		99-104
+		105-110
+		111-116
+		117-122
+		---
+		123-126
+		127-130
+		131-134
+		135-138
+		
+		*/
+		
+    let showAv = 0;
+	let undo = [];
+	
+	let tileMap = [
+	
+		[7,1,0,-1,[],""], [7,2,0,-1,[0,2],""], [7,3,0,-1,[1,3],""], [7,4,0,-1,[2,4],""], [7,5,0,-1,[3,5],""], [7,6,0,-1,[4,6],""], [7,7,0,-1,[5,7],""], [7,8,0,-1,[6,8],""], [7,9,0,-1,[7,9],""], [7,10,0,-1,[8,10],""], [7,11,0,-1,[9,11],""], [7,12,0,-1,[],""], 
+		[6,3,0,-1,[],""], [6,4,0,87,[12,14],""], [6,5,0,88,[13,15],""], [6,6,0,89,[14,16],""], [6,7,0,90,[15,17],""], [6,8,0,91,[16,18],""], [6,9,0,92,[17,19],""], [6,10,0,-1,[],""],
+		[5,2,0,-1,[],""], [5,3,0,-1,[20,22],""], [5,4,0,93,[21,23],""], [5,5,0,94,[22,24],""], [5,6,0,95,[23,25],""], [5,7,0,96,[24,26],""], [5,8,0,97,[25,27],""], [5,9,0,98,[26,28],""], [5,10,0,-1,[27,29],""], [5,11,0,-1,[],""],
+		[3.5,0,0,-1,[],""],
+		[4,1,0,-1,[30,32],""], [4,2,0,-1,[31,33],""], [4,3,0,-1,[32,34],""], [4,4,0,99,[33,35],""], [4,5,0,100,[34,36],""], [4,6,0,101,[35,37],""], [4,7,0,102,[36,38],""], [4,8,0,103,[37,39],""], [4,9,0,104,[38,40],""], [4,10,0,-1,[39,41],""], [4,11,0,-1,[40,42],""], [4,12,0,-1,[41,55],""], 
+		[3,1,0,-1,[30,44],""], [3,2,0,-1,[43,45],""], [3,3,0,-1,[44,46],""], [3,4,0,105,[45,47],""], [3,5,0,106,[46,48],""], [3,6,0,107,[47,49],""], [3,7,0,108,[48,50],""], [3,8,0,109,[49,51],""], [3,9,0,110,[50,52],""], [3,10,0,-1,[51,53],""], [3,11,0,-1,[52,54],""], [3,12,0,-1,[53,55],""],
+		
+		//[3.5,13,0,-1,[56,[54,42]],""], [3.5,14,0,-1,[],""],
+		[3.5,13,0,-1, [56, 54, 42], ""], [3.5,14,0,-1,[],""],
+
+
+		[2,2,0,-1,[],""], [2,3,0,-1,[57,59],""], [2,4,0,111,[58,60],""], [2,5,0,112,[59,61],""], [2,6,0,113,[60,62],""], [2,7,0,114,[61,63],""], [2,8,0,115,[62,64],""], [2,9,0,116,[63,65],""], [2,10,0,-1,[64,66],""], [2,11,0,-1,[],""],
+		[1,3,0,-1,[],""], [1,4,0,117,[67,69],""], [1,5,0,118,[68,70],""], [1,6,0,119,[69,71],""], [1,7,0,120,[70,72],""], [1,8,0,121,[71,73],""], [1,9,0,122,[72,74],""], [1,10,0,-1,[],""],
+		[0,1,0,-1,[],""], [0,2,0,-1,[75,77],""], [0,3,0,-1,[76,78],""], [0,4,0,-1,[77,79],""], [0,5,0,-1,[78,80],""], [0,6,0,-1,[79,81],""], [0,7,0,-1,[80,82],""], [0,8,0,-1,[81,83],""], [0,9,0,-1,[82,84],""], [0,10,0,-1,[83,85],""], [0,11,0,-1,[84,86],""], [0,12,0,-1,[],""], 
+		
+		[6,4,1,-1,[],""], [6,5,1,-1,[87,89],""], [6,6,1,-1,[88,90],""], [6,7,1,-1,[89,91],""], [6,8,1,-1,[90,92],""], [6,9,1,-1,[],""],
+		[5,4,1,-1,[],""], [5,5,1,123,[93,95],""], [5,6,1,124,[94,96],""], [5,7,1,125,[95,97],""], [5,8,1,126,[96,98],""], [5,9,1,-1,[],""],
+		[4,4,1,-1,[],""], [4,5,1,127,[99,101],""], [4,6,1,128,[100,102],""], [4,7,1,129,[101,103],""], [4,8,1,130,[102,104],""], [4,9,1,-1,[],""],
+		[3,4,1,-1,[],""], [3,5,1,131,[105,107],""], [3,6,1,132,[106,108],""], [3,7,1,133,[107,109],""], [3,8,1,134,[108,110],""], [3,9,1,-1,[],""],
+		[2,4,1,-1,[],""], [2,5,1,135,[111,113],""], [2,6,1,136,[112,114],""], [2,7,1,137,[113,115],""], [2,8,1,138,[114,116],""], [2,9,1,-1,[],""],
+		[1,4,1,-1,[],""], [1,5,1,-1,[117,119],""], [1,6,1,-1,[118,120],""], [1,7,1,-1,[119,121],""], [1,8,1,-1,[120,122],""], [1,9,1,-1,[],""],
+		
+		[5,5,2,-1,[],""], [5,6,2,-1,[123,125],""], [5,7,2,-1,[124,126],""], [5,8,2,-1,[],""],
+		[4,5,2,-1,[],""], [4,6,2,139,[127,129],""], [4,7,2,140,[128,130],""], [4,8,2,-1,[],""],
+		[3,5,2,-1,[],""], [3,6,2,141,[131,133],""], [3,7,2,142,[132,134],""], [3,8,2,-1,[],""],
+		[2,5,2,-1,[],""], [2,6,2,-1,[135,137],""], [2,7,2,-1,[136,138],""], [2,8,2,-1,[],""],
+		
+		[4,6,3,143,[],""], [4,7,3,143,[],""],
+		[3,6,3,143,[],""], [3,7,3,143,[],""],
+		
+		[3.5,6.5,4,-1,[],""]
+		
+	];
+			
+	
+
+	function mahjong() {
+	
+		// ver 1.01 (2022-10-04 ) - dodano undo
+	
+		// TODO: parametry startowe z lini poleceń, np do wyboru zestawu kloców
+		const params = new URLSearchParams(window.location.search);
+		
+		th = Math.round(window.innerHeight / 10) // 7.7);
+		tw = Math.round(th * (100/135));
+		tileSpacing = Math.round(th / 12); // /8);
+		const divHeight = ((th - tileSpacing) * 8) + tileSpacing;
+		const divWidth = ((tw - tileSpacing) * 15) + tileSpacing;
+		document.getElementById("div1").style.height = divHeight + "px";
+		document.getElementById("div1").style.width = divWidth + "px";
+		document.getElementById("div1").style.top = ((window.innerHeight - divHeight) / 2) + "px";
+		document.getElementById("div1").style.left = ((window.innerWidth - divWidth) / 2) + "px";
+		
+		let a1 = [];
+		for(let i = 0; i < 144; i++) {
+			a1.push(i);
+		}
+		
+		// sortowanie kloców, trzy razy, bo jeden raz działa słabo, ale i tak działa dziwnie
+		for(let i = 0; i < 10; i++) 
+			a1.sort(function () {return Math.random() - 0.5;});
+					
+		if(0)
+		{
+			for(let i = 0; i < tileMap.length; i++) 
+				tileMap[i][6] = i;
+			tileMap.sort(
+				function(a, b) {
+					av = a[0] + 20 * (20 - a[1]) + 400 * a[2]
+					bv = b[0] + 20 * (20 - b[1]) + 400 * b[2]
+					return av - bv;
+				})
+		}
+
+		for(let i = 0; i < tileMap.length; i++) {
+			
+			let img1 = new Image();
+			img1.src = "./tiles/01/" + tiles[a1[i]] + ".png"; //+ ".svg";			
+			tileMap[i][5] = tiles[a1[i]];
+			img1.width = tw;
+			img1.height = th;
+			img1.style.position = "absolute";
+			img1.id = i;
+			img1.onclick = tileClick;
+			
+			if(i < 87) {
+				img1.style.zIndex = 100 - i;
+			}
+			else if(i < 123) {
+				img1.style.zIndex = 200 - i;
+			}
+			else if(i < 139) {
+				img1.style.zIndex = 250 - i;
+			}
+			else if(i < 143) {
+				img1.style.zIndex = 300 - i;
+			}
+			else {
+				img1.style.zIndex = 301;
+			}
+
+			let offset = tileMap[i][2] * tileSpacing;
+			img1.style.top = ((tileMap[i][0] * (th - tileSpacing)) - offset) + "px";
+			img1.style.left = ((tileMap[i][1] * (tw - tileSpacing)) + offset) + "px";
+			//img1.title = i;
+			document.getElementById("div1").appendChild(img1);
+		}
+	
+		checkAvailableMoves();
+	
+	}
+	
+	
+	
+	function isLocked(id) {
+		
+		let locked = true;
+		
+		let o = tileMap[id];
+		let tilesToCheck = tileMap[id][4];
+		
+		for(let i = 0; i < tilesToCheck.length; i++) {
+			tc = tilesToCheck[i];
+			//tcn = tileMap.filter(o => o[6] == tc)[0]
+			//if (tcn[5] == "") {
+			if (tileMap[tc][5] == "") {
+				locked = false;
+				break;
+			}
+		}
+				
+		if(tilesToCheck.length == 0) { 
+			locked = false; 
+		}
+		
+		if(o[3] > -1) {
+
+			//tcn = tileMap.filter(it => it[6] == o[3])[0]
+			//if(tcn[5] != "") {
+			if(tileMap[o[3]][5] != "") {
+				locked = true;
+			}
+		}
+		
+		return locked;
+	
+	}
+	
+	
+	
+	function checkAvailableMoves() {
+	
+		let tiles = {};
+		let tilesId = [];
+		let tilesLeft = 0;
+		
+		for(let i = 0; i < tileMap.length; i++) {
+			
+			
+			// kasuje podświetlenie dostępnych ruchów
+			/*
+			let img = document.getElementById("div1").querySelector("img[id='" + i + "']");
+			img.style.filter = null;
+			*/
+			
+			
+			let tileName = tileMap[i][5];
+			
+			if(tileName != "") {
+			
+				tilesLeft++;
+				if(!isLocked(i)) {
+				
+					if(tileName.substring(1,2) == "_") { 
+						tileName = tileName.substring(0,2); 
+					}
+					if(tiles[tileName] != null) {
+						tiles[tileName].push(i);
+					}
+					else {
+						tiles[tileName] = [i];
+					}
+	 	 	 	 	// kolorowanie odblokowanych
+	 	 	 	 	if (0)
+	 	 	 	 	{
+						let img = document.getElementById("div1").querySelector("img[id='" + i +"']");
+						img.style.filter = "brightness(.7)";
+	 	 	 	 	}
+
+				}
+			}
+		}
+		
+		let count = 0;
+		for (const [key, value] of Object.entries(tiles)) {
+			
+			if(value.length > 1) {
+
+				count += value.length == 4 ? 2 : 1;
+				
+				// podświetla dostępne ruchy - tylko dla miękiszonów
+                if (showAv > 0)
+				{
+					value.forEach(i => {
+						let img = document.getElementById("div1").querySelector("img[id='" + i +"']");
+						img.style.filter = "brightness(.7)";
+					})
+					showAv = 0;
+				}
+
+				
+			}
+		}
+		console.log("pozostało ruchów: " + count);
+		//console.log("pozostało kloców: " + tilesLeft);
+		if(count == 0) {
+			alert(tilesLeft == 0 ? "BRAWO" : "DUPA DUPA GÓWNO DUPA");
+		}
+		
+	}
+	
+	
+	
+	function selectTile(id) {
+	
+		document.getElementById("div1").querySelector("img[id='" + id + "']").style.animation = "blinking 1s infinite";	
+		selectedTile = id;
+		
+	}
+	
+	
+	
+	function unselectTile() {
+	
+		if(selectedTile > -1) {
+		
+			document.getElementById("div1").querySelector("img[id='" + selectedTile + "']").style.animation = null;
+			selectedTile = -1;
+		}
+		
+	}
+	
+
+	function showAvail() 
+    {
+        showAv = 1;
+        checkAvailableMoves();
+    }	
+
+
+	function undoLastMove() {
+		
+		if(undo.length > 0) {
+		
+			const tileName2 = undo.pop();
+			const id2 = undo.pop();
+			const tileName1 = undo.pop();
+			const id1 = undo.pop();
+			document.getElementById("div1").querySelector("img[id='" + id1 + "']").style.display = "block";
+			tileMap[id1][5] = tileName1;
+			document.getElementById("div1").querySelector("img[id='" + id2 + "']").style.display = "block";
+			tileMap[id2][5] = tileName2;
+			
+			unselectTile();
+			checkAvailableMoves();
+		}
+		
+	}
+	
+	
+	
+	function tileClick(e) {
+		
+		const id = parseInt(e.currentTarget.id);
+				
+		let locked = isLocked(id)
+		console.log("id " + id + " locked " + locked + " nm " + tileMap[id][5]);
+
+		if (locked) {
+			return;
+		}
+		
+		if(selectedTile == -1) {
+			selectTile(id);
+		}
+		else {
+			if(selectedTile == id) {
+				unselectTile();
+			}
+			else {
+			
+				let tileName1 = tileMap[id][5];
+				let tileName2 = tileMap[selectedTile][5];
+				//if(tileName1 == tileName2 || (tileName1.substring(0,2) == "s_" && tileName2.substring(0,2) == "s_") || (tileName1.substring(0,2) == "f_" && tileName2.substring(0,2) == "f_")) 
+                if (tileName1.substring(0,2) == tileName2.substring(0,2))
+                {
+				
+					tileMap[id][5] = "";
+					tileMap[selectedTile][5] = "";
+					document.getElementById("div1").querySelector("img[id='" + selectedTile + "']").style.display = "none";
+					document.getElementById("div1").querySelector("img[id='" + id + "']").style.display = "none";
+					
+					undo.push(id);
+					undo.push(tileName1);
+					undo.push(selectedTile);
+					undo.push(tileName2);
+					
+					unselectTile();
+					checkAvailableMoves();
+				}
+			}
+		}
+	}
+
+</script>
+
+<button onclick="undoLastMove()">undo</button>
+<button onclick="showAvail()">show</button>
+<div id="div1"></div>
+
+</body>
+</html>
