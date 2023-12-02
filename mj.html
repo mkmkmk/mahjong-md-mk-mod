@@ -349,9 +349,11 @@
 	
 	function selectTile(id) {
 	
-		document.getElementById("div1").querySelector("img[id='" + id + "']").style.animation = "blinking 1s infinite";	
 		selectedTile = id;
-		
+		var img = document.getElementById("div1").querySelector("img[id='" + id + "']")
+		img.style.animation = "blinking 1s infinite";
+		img.border ="5px solid color blue"
+		img.style.borderColor = "blue";
 	}
 	
 	
@@ -360,7 +362,9 @@
 	
 		if(selectedTile > -1) {
 		
-			document.getElementById("div1").querySelector("img[id='" + selectedTile + "']").style.animation = null;
+			var img = document.getElementById("div1").querySelector("img[id='" + selectedTile + "']")
+			img.style.animation = null;
+			img.border =""
 			selectedTile = -1;
 		}
 		
