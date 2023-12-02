@@ -17,6 +17,20 @@
 		display: block;
 	}
 	
+	#gameOver {
+		font-family: 'VT323', ;
+		font-size:10em;
+		text-align:center;
+		position: absolute;
+		display: none;
+		background-color: yellow;
+		color: brown;
+		z-index: +1000;
+		height : "max-content";
+		width : "max-content";
+
+	}
+
 	@keyframes blinking {
         0% { filter: brightness(1) }
 		10% { filter: brightness(.9) }
@@ -150,10 +164,11 @@
 		tileSpacing = Math.round(th / 12); // /8);
 		const divHeight = ((th - tileSpacing) * 8) + tileSpacing;
 		const divWidth = ((tw - tileSpacing) * 15) + tileSpacing;
-		document.getElementById("div1").style.height = divHeight + "px";
-		document.getElementById("div1").style.width = divWidth + "px";
-		document.getElementById("div1").style.top = ((window.innerHeight - divHeight) / 2) + "px";
-		document.getElementById("div1").style.left = ((window.innerWidth - divWidth) / 2) + "px";
+		var div1 = document.getElementById("div1")
+		div1.style.height = divHeight + "px";
+		div1.style.width = divWidth + "px";
+		div1.style.top = ((window.innerHeight - divHeight) / 2) + "px";
+		div1.style.left = ((window.innerWidth - divWidth) / 2) + "px";
 		
 		let a1 = [];
 		for(let i = 0; i < 144; i++) {
@@ -317,8 +332,15 @@
 		}
 		console.log("pozostało ruchów: " + count);
 		//console.log("pozostało kloców: " + tilesLeft);
-		if(count == 0) {
-			alert(tilesLeft == 0 ? "BRAWO" : "DUPA DUPA GÓWNO DUPA");
+		if (count == 0)
+		{
+			var msg = tilesLeft == 0 ? "BRAWO" : "DUPA"
+			//alert(msg);
+			gameOver = document.getElementById("gameOver");
+			gameOver.textContent = msg
+			gameOver.style.display = "block"
+			gameOver.style.top = (window.innerHeight - gameOver.offsetHeight) *.5  + "px";
+			gameOver.style.left = (window.innerWidth - gameOver.offsetWidth) * .5 + "px";
 		}
 		
 	}
@@ -448,6 +470,6 @@
 <button onclick="undoLastMove()">undo</button>
 <button onclick="showAvail()">show</button>
 <div id="div1"></div>
-
+<div id="gameOver"/>
 </body>
 </html>
