@@ -16,6 +16,11 @@
 		position: absolute;
 		display: block;
 	}
+
+	#avail {
+		color: white;
+		font-size: larger;
+	}
 	
 	#gameOver {
 		font-family: 'VT323', ;
@@ -333,6 +338,8 @@
 			}
 		}
 		console.log("pozostało ruchów: " + count);
+		let av = document.getElementById("avail")
+		av.textContent = "moves: " + count;
 		//console.log("pozostało kloców: " + tilesLeft);
 		if (count == 0)
 		{
@@ -478,6 +485,7 @@
 <button onclick="toggleFullScreen()">full screen</button>
 <button onclick="undoLastMove()">undo</button>
 <button onclick="showAvail()">show</button>
+<div id="avail">???</div>
 <div id="div1"></div>
 <div id="gameOver"/>
 </body>
