@@ -404,6 +404,11 @@
 		
 		if(undo.length > 0) {
 		
+			var div1 = document.getElementById("div1")
+			div1.style.display = "block"
+			gameOver = document.getElementById("gameOver");
+			gameOver.style.display = "none"
+
 			const tileName2 = undo.pop();
 			const id2 = undo.pop();
 			const tileName1 = undo.pop();
