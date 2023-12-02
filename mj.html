@@ -323,6 +323,8 @@
 					value.forEach(i => {
 						let img = document.getElementById("div1").querySelector("img[id='" + i +"']");
 						img.style.filter = "brightness(.7)";
+						img.border ="5px solid color blue"
+						img.style.borderColor = "blue";
 					})
 					showAv = 0;
 				}
@@ -367,6 +369,7 @@
 			var img = document.getElementById("div1").querySelector("img[id='" + selectedTile + "']")
 			img.style.animation = null;
 			img.border =""
+			img.style.filter = null;
 			selectedTile = -1;
 		}
 		
