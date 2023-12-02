@@ -316,30 +316,39 @@
 		}
 		
 		let count = 0;
-		for (const [key, value] of Object.entries(tiles)) {
-			
-			if(value.length > 1) {
-
-				count += value.length == 4 ? 2 : 1;
+		try {
+			for (const [key, value] of Object.entries(tiles)) {
 				
-				// podświetla dostępne ruchy - tylko dla miękiszonów
-                if (showAv > 0)
-				{
-					value.forEach(i => {
-						let img = document.getElementById("div1").querySelector("img[id='" + i +"']");
-						img.style.filter = "brightness(.7)";
-						img.border ="5px solid color blue"
-						img.style.borderColor = "blue";
-					})
-					showAv = 0;
+				if(value.length > 1) {
+
+					count += value.length == 4 ? 2 : 1;
+
+					// podświetla dostępne ruchy - tylko dla miękiszonów
+					if (showAv > 0)
+					{
+						value.forEach(i => {
+							let img = document.getElementById("div1").querySelector("img[id='" + i +"']");
+							img.style.filter = "brightness(.7)";
+							img.border ="5px solid color blue"
+							img.style.borderColor = "blue";
+						})
+						showAv = 0;
+					}
 				}
-
-				
 			}
+		} catch (error) {
+			//console.error(error);
+			let av = document.getElementById("avail")
+			av.textContent = error;
 		}
+
+		if (count > 0)
+		{
+			let av = document.getElementById("avail")
+			av.textContent = "moves: " + count;
+		}
+
 		console.log("pozostało ruchów: " + count);
-		let av = document.getElementById("avail")
-		av.textContent = "moves: " + count;
 		//console.log("pozostało kloców: " + tilesLeft);
 		if (count == 0)
 		{
