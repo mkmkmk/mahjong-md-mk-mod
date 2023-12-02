@@ -336,6 +336,8 @@
 		{
 			var msg = tilesLeft == 0 ? "BRAWO" : "DUPA"
 			//alert(msg);
+			var div1 = document.getElementById("div1")
+			div1.style.display = "none"
 			gameOver = document.getElementById("gameOver");
 			gameOver.textContent = msg
 			gameOver.style.display = "block"
