@@ -393,17 +393,15 @@
 
 		if (tile == null)
         {
-            //foreach (var t in tiles)
 			tiles.forEach(t =>
             {
-                // foreach (var match in find_matches (t))
 				if (t == null)
 					console.log("CODE ERROR")
 				var fm = find_matches(t)
 				fm.forEach(match => 
                 {
                     already_matched = false;
-                    // foreach (var existing_match in matches)
+					
 					matches.every(existing_match =>
                     {
                         // if (existing_match.tile0 == match.tile1 && existing_match.tile1 == match.tile0)
@@ -540,12 +538,9 @@
 
 	function mahjong() {
 	
-		
 		// TODO: parametry startowe z lini poleceń, np do wyboru zestawu kloców
 		const params = new URLSearchParams(window.location.search);
 		
-
-
 		map.slots.forEach(
 			slot => 
 			{
@@ -584,20 +579,18 @@
 		div1.style.width = divWidth + "px";
 		div1.style.top = ((window.innerHeight - divHeight) / 2) + "px";
 		div1.style.left = ((window.innerWidth - divWidth) / 2) + "px";
-		
-	
+
 		// for(let i = 0; i < tileMap.length; i++)
 		for (let i = 0; i < tiles.length; i++)
 		{
-			
 			let img1 = new Image();
-			// img1.src = "./tiles/01/" + tiles_obso[a1[i]] + ".png"; //+ ".svg";
-			// tileMap[i][5] = tiles_obso[a1[i]];
 
 			var tile = tiles[i]
 			tile.name = tile_name[Math.trunc(tile.number / 4)]
+
 			if (tile.name == "s_")
 				tile.name = tile_name_s_floor[tile.number % 4];
+
 			if (tile.name == "f_")
 				tile.name = tile_name_f_floor[tile.number % 4];
 			
@@ -611,112 +604,15 @@
 			
 			img1.style.zIndex  = tile.slot.layer
 
-			// let offset = tileMap[i][2] * tileSpacing;
-			// img1.style.top = ((tileMap[i][0] * (th - tileSpacing)) - offset) + "px";
-			// img1.style.left = ((tileMap[i][1] * (tw - tileSpacing)) + offset) + "px";
-
 			let offset = tile.slot.layer * tileSpacing;
 			img1.style.top = ((tile.slot.y/2 * (th - tileSpacing)) - offset) + "px";
 			img1.style.left = ((tile.slot.x/2 * (tw - tileSpacing)) + offset) + "px";
 
-			//img1.title = i;
 			document.getElementById("div1").appendChild(img1);
 		}
 	
 		checkAvailableMoves();
 	
-	}
-	
-	
-	
-	function isLocked(id) {
-		
-		let locked = true;
-		
-		let o = tileMap[id];
-		let tilesToCheck = tileMap[id][4];
-		
-		for(let i = 0; i < tilesToCheck.length; i++) {
-			tc = tilesToCheck[i];
-			//tcn = tileMap.filter(o => o[6] == tc)[0]
-			//if (tcn[5] == "") {
-			if (tileMap[tc][5] == "") {
-				locked = false;
-				break;
-			}
-		}
-				
-		if(tilesToCheck.length == 0) { 
-			locked = false; 
-		}
-		
-		if(o[3] > -1) {
-
-			//tcn = tileMap.filter(it => it[6] == o[3])[0]
-			//if(tcn[5] != "") {
-			if(tileMap[o[3]][5] != "") {
-				locked = true;
-			}
-		}
-		
-		return locked;
-	
-	}
-	
-	// for older environments
-	if (!Object.entries)
-		Object.entries =
-			function( obj ){
-				var ownProps = Object.keys( obj ),
-					i = ownProps.length,
-					resArray = new Array(i);
-				while (i--)
-					resArray[i] = [ownProps[i], obj[ownProps[i]]];
-				return resArray;
-			};
-
-
-	function getAvailableMoves() {
-		
-		let tiles = {};
-		let left = 0;
-
-		for (let i = 0; i < tileMap.length; i++) {
-						
-			// kasuje podświetlenie dostępnych ruchów
-			/*
-			let img = document.getElementById("div1").querySelector("img[id='" + i + "']");
-			img.style.filter = null;
-			*/
-			
-			let tileName = tileMap[i][5];
-			
-			if (tileName != "") {
-				
-				left++;
-				if (!isLocked(i)) {
-					
-					if (tileName.substring(1,2) == "_") { 
-						tileName = tileName.substring(0, 2); 
-					}
-					if (tiles[tileName] != null) {
-						tiles[tileName].push(i);
-					}
-					else {
-						tiles[tileName] = [i];
-					}
-					// kolorowanie odblokowanych
-					if (0)
-					{
-						let img = document.getElementById("div1").querySelector("img[id='" + i +"']");
-						img.style.filter = "brightness(.7)";
-					}
-					
-				}
-			}
-		}
-
-		return { tiles: Object.entries(tiles), left };
 	}
 
 
@@ -730,6 +626,30 @@
 		let av = document.getElementById("avail")
 		av.textContent = "moves: " + match_n;
 		console.log("moves left: " + match_n);
+
+		// kasuje podświetlenie dostępnych ruchów
+		// for (let i = 0; i < tileMap.length; i++) {
+		// let img = document.getElementById("div1").querySelector("img[id='" + i + "']");
+		// img.style.filter = null;
+
+		// for (const [key, value] of avail.tiles) {
+		// 	if(value.length > 1) {
+
+		// 		count += value.length == 4 ? 2 : 1;
+
+		// 		// podświetla dostępne ruchy - tylko dla miękiszonów
+		// 		if (showAv > 0)
+		// 		{
+		// 			value.forEach(i => {
+		// 				let img = document.getElementById("div1").querySelector("img[id='" + i +"']");
+		// 				img.style.filter = "brightness(.7)";
+		// 				img.border ="5px solid color blue"
+		// 				img.style.borderColor = "blue";
+		// 			})
+		// 			showAv = 0;
+		// 		}
+		// 	}
+		// }
 
 		if (match_n == 0)
 		{
@@ -746,53 +666,6 @@
 	}
 
 
-	function checkAvailableMoves_obso() {
-	
-		avail = getAvailableMoves() 
-		
-		let count = 0;
-
-		for (const [key, value] of avail.tiles) {
-			if(value.length > 1) {
-
-				count += value.length == 4 ? 2 : 1;
-
-				// podświetla dostępne ruchy - tylko dla miękiszonów
-				if (showAv > 0)
-				{
-					value.forEach(i => {
-						let img = document.getElementById("div1").querySelector("img[id='" + i +"']");
-						img.style.filter = "brightness(.7)";
-						img.border ="5px solid color blue"
-						img.style.borderColor = "blue";
-					})
-					showAv = 0;
-				}
-			}
-		}
-
-		let av = document.getElementById("avail")
-		av.textContent = "moves: " + count;
-		console.log("pozostało ruchów: " + count);
-		//console.log("pozostało kloców: " + tilesLeft);
-
-		if (false && count == 0)
-		{
-			var msg = avail.left == 0 ? "BRAWO" : "DUPA"
-			//alert(msg);
-			var div1 = document.getElementById("div1")
-			div1.style.display = "none"
-			gameOver = document.getElementById("gameOver");
-			gameOver.textContent = msg
-			gameOver.style.display = "block"
-			gameOver.style.top = (window.innerHeight - gameOver.offsetHeight) *.5  + "px";
-			gameOver.style.left = (window.innerWidth - gameOver.offsetWidth) * .5 + "px";
-		}
-		
-	}
-	
-	
-	
 	function selectTile(id) {
 	
 		selectedTileId = id;
@@ -801,7 +674,6 @@
 		img.border ="5px solid color blue"
 		img.style.borderColor = "blue";
 	}
-	
 	
 	
 	function unselectTile() {
@@ -834,9 +706,9 @@
 			gameOver = document.getElementById("gameOver");
 			gameOver.style.display = "none"
 
-			const tileName2 = undo.pop();
+			// const tileName2 = undo.pop();
 			const id2 = undo.pop();
-			const tileName1 = undo.pop();
+			// const tileName1 = undo.pop();
 			const id1 = undo.pop();
 			document.getElementById("div1").querySelector("img[id='" + id1 + "']").style.display = "block";
 			//tileMap[id1][5] = tileName1;
@@ -864,8 +736,7 @@
 
 		if (locked) 
 			return;
-		
-		
+				
 		if(selectedTileId == -1) {
 			selectTile(id);
 		}
@@ -877,12 +748,8 @@
 			
 				let tile2 = tiles[selectedTileId]
 				
-				//if(tileName1 == tileName2 || (tileName1.substring(0,2) == "s_" && tileName2.substring(0,2) == "s_") || (tileName1.substring(0,2) == "f_" && tileName2.substring(0,2) == "f_")) 
-                //if (tile.name.substring(0,2) == tile2.name.substring(0,2))
 				if (tile.matches(tile2))
                 {
-					// if (!tile.matches(tile2))
-					// 	console.log("!matches() !!! ***");
 					tile.visible = false;
 					tile2.visible = false;
 
@@ -890,9 +757,7 @@
 					document.getElementById("div1").querySelector("img[id='" + id + "']").style.display = "none";
 					
 					undo.push(id);
-					undo.push(tile.name);
 					undo.push(selectedTileId);
-					undo.push(tile2.name);
 					
 					unselectTile();
 					checkAvailableMoves();
