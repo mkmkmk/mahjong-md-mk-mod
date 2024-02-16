@@ -318,6 +318,7 @@
 		return compare_slots (a.slot, b.slot);
 	}
 
+
 	function switch_tiles(a, b)
 	{
 		if (a.visible && b.visible)
@@ -653,36 +654,50 @@
 				})
 		}
 
-		for(let i = 0; i < tileMap.length; i++) {
+		// for(let i = 0; i < tileMap.length; i++)
+		for (let i = 0; i < tiles.length; i++)
+		{
 			
 			let img1 = new Image();
-			img1.src = "./tiles/01/" + tiles_obso[a1[i]] + ".png"; //+ ".svg";			
-			tileMap[i][5] = tiles_obso[a1[i]];
+			// img1.src = "./tiles/01/" + tiles_obso[a1[i]] + ".png"; //+ ".svg";
+			// tileMap[i][5] = tiles_obso[a1[i]];
+
+			var tile = tiles[i]
+			var tile_name = tiles_obso[tile.number]
+
+			img1.src = "./tiles/01/" + tile_name + ".png"; //+ ".svg";
+
 			img1.width = tw;
 			img1.height = th;
 			img1.style.position = "absolute";
 			img1.id = i;
 			img1.onclick = tileClick;
 			
-			if(i < 87) {
-				img1.style.zIndex = 100 - i;
-			}
-			else if(i < 123) {
-				img1.style.zIndex = 200 - i;
-			}
-			else if(i < 139) {
-				img1.style.zIndex = 250 - i;
-			}
-			else if(i < 143) {
-				img1.style.zIndex = 300 - i;
-			}
-			else {
-				img1.style.zIndex = 301;
-			}
+			// TODO OFF ??
+			// if(i < 87) {
+			// 	img1.style.zIndex = 100 - i;
+			// }
+			// else if(i < 123) {
+			// 	img1.style.zIndex = 200 - i;
+			// }
+			// else if(i < 139) {
+			// 	img1.style.zIndex = 250 - i;
+			// }
+			// else if(i < 143) {
+			// 	img1.style.zIndex = 300 - i;
+			// }
+			// else {
+			// 	img1.style.zIndex = 301;
+			// }
 
-			let offset = tileMap[i][2] * tileSpacing;
-			img1.style.top = ((tileMap[i][0] * (th - tileSpacing)) - offset) + "px";
-			img1.style.left = ((tileMap[i][1] * (tw - tileSpacing)) + offset) + "px";
+			// let offset = tileMap[i][2] * tileSpacing;
+			// img1.style.top = ((tileMap[i][0] * (th - tileSpacing)) - offset) + "px";
+			// img1.style.left = ((tileMap[i][1] * (tw - tileSpacing)) + offset) + "px";
+
+			let offset = tile.slot.layer * tileSpacing;
+			img1.style.top = ((tile.slot.y/2 * (th - tileSpacing)) - offset) + "px";
+			img1.style.left = ((tile.slot.x/2 * (tw - tileSpacing)) + offset) + "px";
+
 			//img1.title = i;
 			document.getElementById("div1").appendChild(img1);
 		}
@@ -814,7 +829,8 @@
 		console.log("pozostało ruchów: " + count);
 		//console.log("pozostało kloców: " + tilesLeft);
 
-		if (count == 0)
+		// TODO temp OFF
+		if (false && count == 0)
 		{
 			var msg = avail.left == 0 ? "BRAWO" : "DUPA"
 			//alert(msg);
