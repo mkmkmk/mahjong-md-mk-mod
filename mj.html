@@ -111,7 +111,7 @@
 			return res;
 		}
 
-		static easy()
+		static classic()
 		{
 			var res = new Map()
 			res.slots.push (new Slot (13, 7, 4));
@@ -291,13 +291,14 @@
 		constructor(slot)
 		{
 			this.number = 0;
+			this.name = "";
 			this.slot = slot;
 			this.visible = true
 			this.move_number = 0;
 		}
 
 		set()
-                {
+		{
 			return Math.trunc(this.number / 4);
 		}
 
@@ -335,89 +336,11 @@
 	{
 		constructor(tile0, tile1)
 		{
-		        this.tile0 = tile0;
+			this.tile0 = tile0;
 			this.tile1 = tile1;
 		}
 	}
 
-
-	let tw = 100;
-	let th = 120;
-	let tileSpacing = 13;
-	
-	let selectedTile = -1;
-	
-	const tiles_obso = [
-		"b1","b2","b3","b4","b5","b6","b7","b8","b9",
-		"b1","b2","b3","b4","b5","b6","b7","b8","b9",
-		"b1","b2","b3","b4","b5","b6","b7","b8","b9",
-		"b1","b2","b3","b4","b5","b6","b7","b8","b9",
-		"c1","c2","c3","c4","c5","c6","c7","c8","c9",
-		"c1","c2","c3","c4","c5","c6","c7","c8","c9",
-		"c1","c2","c3","c4","c5","c6","c7","c8","c9",
-		"c1","c2","c3","c4","c5","c6","c7","c8","c9",
-		"d1","d2","d3","d4","d5","d6","d7","d8","d9",
-		"d1","d2","d3","d4","d5","d6","d7","d8","d9",
-		"d1","d2","d3","d4","d5","d6","d7","d8","d9",
-		"d1","d2","d3","d4","d5","d6","d7","d8","d9",
-		"dr","dg","dw",
-		"dr","dg","dw",
-		"dr","dg","dw",
-		"dr","dg","dw",
-		"we","ws","ww","wn", 
-		"we","ws","ww","wn", 
-		"we","ws","ww","wn", 
-		"we","ws","ww","wn",
-		"s_sp", "s_su", "s_a", "s_w",
-		"f_p", "f_o", "f_c", "f_b"
-	];
-	
-    let showAv = 0;
-	let undo = [];
-
-	
-	// *************  Game 
-	var map = Map.easy()
-	// var map = Map.test()
-
-	console.log(map.width())
-	console.log(map.height())
-
-	var tiles = []
-	move_number = 1;	
-
-	map.slots.forEach(
-		slot => 
-		{
-			var tile = new Tile(slot);
-			tile.number = 0;
-			tiles.push(tile)
-		});
-	tiles.sort(compare_tiles)
-	
-	// var tx = tiles[5];
-	// tx.number = 5;
-
-	var n_pairs = tiles.length / 2;
-	var numbers = new Array(n_pairs);
-	for (var i = 0; i < n_pairs; i++)
-		numbers[i] = i * 2;
-	for (var i = 0; i < n_pairs; i++)
-	{
-		//var n = Random.int_range (i, n_pairs);
-		var n = i + Math.trunc(Math.random() * (n_pairs - i));
-		var t = numbers[i];
-		numbers[i] = numbers[n];
-		numbers[n] = t;
-	}
-
-	// find_matches_calls = 0;
-
-	shuffle(numbers);
-	// console.log("find_matches_calls: " + find_matches_calls)
-	console.log("shuffle done")
-
-	reset();
 
 	function shuffle(numbers, depth = 0)
 	{
@@ -456,7 +379,6 @@
 		
 		return false;
 	}
-
 
 
 	function find_matches(tile = null)
@@ -514,7 +436,7 @@
             })
         }
 		// if (tile == null)
-		//  	console.log("out: return #2 matches num: "+ matches.length);
+		// console.log("out: return #2 matches num: "+ matches.length);
         return matches;
 	}
 
@@ -571,75 +493,81 @@
 	
     function reset()
     {
-        //reset_clock();
         move_number = 1;
         selected_tile = null;
-        // set_hint (null, null);
-        // foreach (var tile in tiles)
 		tiles.forEach(tile =>
         {
             tile.visible = true;
             tile.move_number = 0;
         })
-        // redraw_all_tiles ();
     }
 
-	// *********** TODO				
 
+	let tw = 100;
+	let th = 120;
+	let tileSpacing = 13;
 
-	// let tileMap = [
+	let selectedTileId = -1;
+
+	const tile_name = [
+		"b1","b2","b3","b4","b5","b6","b7","b8","b9",
+		"c1","c2","c3","c4","c5","c6","c7","c8","c9",
+		"d1","d2","d3","d4","d5","d6","d7","d8","d9",
+		"dr","dg","dw",
+		"we","ws","ww","wn",
+		"s_",
+		"f_"
+		// "s_sp", "s_su", "s_a", "s_w",
+		// "f_p", "f_o", "f_c", "f_b"
+	];
+
+	const tile_name_s_floor =
+	    ["s_sp", "s_su", "s_a", "s_w"]
+
+	const tile_name_f_floor =
+	    ["f_p", "f_o", "f_c", "f_b"]
+
+    let showAv = 0;
+	let undo = [];
 	
-	// 	[7,1,0,-1,[],""], [7,2,0,-1,[0,2],""], [7,3,0,-1,[1,3],""], [7,4,0,-1,[2,4],""], [7,5,0,-1,[3,5],""], [7,6,0,-1,[4,6],""], [7,7,0,-1,[5,7],""], [7,8,0,-1,[6,8],""], [7,9,0,-1,[7,9],""], [7,10,0,-1,[8,10],""], [7,11,0,-1,[9,11],""], [7,12,0,-1,[],""], 
-	// 	[6,3,0,-1,[],""], [6,4,0,87,[12,14],""], [6,5,0,88,[13,15],""], [6,6,0,89,[14,16],""], [6,7,0,90,[15,17],""], [6,8,0,91,[16,18],""], [6,9,0,92,[17,19],""], [6,10,0,-1,[],""],
-	// 	[5,2,0,-1,[],""], [5,3,0,-1,[20,22],""], [5,4,0,93,[21,23],""], [5,5,0,94,[22,24],""], [5,6,0,95,[23,25],""], [5,7,0,96,[24,26],""], [5,8,0,97,[25,27],""], [5,9,0,98,[26,28],""], [5,10,0,-1,[27,29],""], [5,11,0,-1,[],""],
-	// 	[3.5,0,0,-1,[],""],
-	// 	[4,1,0,-1,[30,32],""], [4,2,0,-1,[31,33],""], [4,3,0,-1,[32,34],""], [4,4,0,99,[33,35],""], [4,5,0,100,[34,36],""], [4,6,0,101,[35,37],""], [4,7,0,102,[36,38],""], [4,8,0,103,[37,39],""], [4,9,0,104,[38,40],""], [4,10,0,-1,[39,41],""], [4,11,0,-1,[40,42],""], [4,12,0,-1,[41,55],""], 
-	// 	[3,1,0,-1,[30,44],""], [3,2,0,-1,[43,45],""], [3,3,0,-1,[44,46],""], [3,4,0,105,[45,47],""], [3,5,0,106,[46,48],""], [3,6,0,107,[47,49],""], [3,7,0,108,[48,50],""], [3,8,0,109,[49,51],""], [3,9,0,110,[50,52],""], [3,10,0,-1,[51,53],""], [3,11,0,-1,[52,54],""], [3,12,0,-1,[53,55],""],
-		
-	// 	//[3.5,13,0,-1,[56,[54,42]],""], [3.5,14,0,-1,[],""],
-	// 	[3.5,13,0,-1, [56, 54, 42], ""], [3.5,14,0,-1,[],""],
+	// *************  Game 
+	var map = Map.classic()
+	// var map = Map.test()
 
+	var tiles = []
+	move_number = 1;	
 
-	// 	[2,2,0,-1,[],""], [2,3,0,-1,[57,59],""], [2,4,0,111,[58,60],""], [2,5,0,112,[59,61],""], [2,6,0,113,[60,62],""], [2,7,0,114,[61,63],""], [2,8,0,115,[62,64],""], [2,9,0,116,[63,65],""], [2,10,0,-1,[64,66],""], [2,11,0,-1,[],""],
-	// 	[1,3,0,-1,[],""], [1,4,0,117,[67,69],""], [1,5,0,118,[68,70],""], [1,6,0,119,[69,71],""], [1,7,0,120,[70,72],""], [1,8,0,121,[71,73],""], [1,9,0,122,[72,74],""], [1,10,0,-1,[],""],
-	// 	[0,1,0,-1,[],""], [0,2,0,-1,[75,77],""], [0,3,0,-1,[76,78],""], [0,4,0,-1,[77,79],""], [0,5,0,-1,[78,80],""], [0,6,0,-1,[79,81],""], [0,7,0,-1,[80,82],""], [0,8,0,-1,[81,83],""], [0,9,0,-1,[82,84],""], [0,10,0,-1,[83,85],""], [0,11,0,-1,[84,86],""], [0,12,0,-1,[],""], 
-		
-	// 	[6,4,1,-1,[],""], [6,5,1,-1,[87,89],""], [6,6,1,-1,[88,90],""], [6,7,1,-1,[89,91],""], [6,8,1,-1,[90,92],""], [6,9,1,-1,[],""],
-	// 	[5,4,1,-1,[],""], [5,5,1,123,[93,95],""], [5,6,1,124,[94,96],""], [5,7,1,125,[95,97],""], [5,8,1,126,[96,98],""], [5,9,1,-1,[],""],
-	// 	[4,4,1,-1,[],""], [4,5,1,127,[99,101],""], [4,6,1,128,[100,102],""], [4,7,1,129,[101,103],""], [4,8,1,130,[102,104],""], [4,9,1,-1,[],""],
-	// 	[3,4,1,-1,[],""], [3,5,1,131,[105,107],""], [3,6,1,132,[106,108],""], [3,7,1,133,[107,109],""], [3,8,1,134,[108,110],""], [3,9,1,-1,[],""],
-	// 	[2,4,1,-1,[],""], [2,5,1,135,[111,113],""], [2,6,1,136,[112,114],""], [2,7,1,137,[113,115],""], [2,8,1,138,[114,116],""], [2,9,1,-1,[],""],
-	// 	[1,4,1,-1,[],""], [1,5,1,-1,[117,119],""], [1,6,1,-1,[118,120],""], [1,7,1,-1,[119,121],""], [1,8,1,-1,[120,122],""], [1,9,1,-1,[],""],
-		
-	// 	[5,5,2,-1,[],""], [5,6,2,-1,[123,125],""], [5,7,2,-1,[124,126],""], [5,8,2,-1,[],""],
-	// 	[4,5,2,-1,[],""], [4,6,2,139,[127,129],""], [4,7,2,140,[128,130],""], [4,8,2,-1,[],""],
-	// 	[3,5,2,-1,[],""], [3,6,2,141,[131,133],""], [3,7,2,142,[132,134],""], [3,8,2,-1,[],""],
-	// 	[2,5,2,-1,[],""], [2,6,2,-1,[135,137],""], [2,7,2,-1,[136,138],""], [2,8,2,-1,[],""],
-		
-	// 	[4,6,3,143,[],""], [4,7,3,143,[],""],
-	// 	[3,6,3,143,[],""], [3,7,3,143,[],""],
-		
-	// 	[3.5,6.5,4,-1,[],""]
-		
-	// ];
-			
+	map.slots.forEach(
+		slot => 
+		{
+			var tile = new Tile(slot);
+			tiles.push(tile)
+		});
+	tiles.sort(compare_tiles)
+	
+	var n_pairs = tiles.length / 2;
+	var numbers = new Array(n_pairs);
+	for (var i = 0; i < n_pairs; i++)
+		numbers[i] = i * 2;
+	for (var i = 0; i < n_pairs; i++)
+	{
+		var n = i + Math.trunc(Math.random() * (n_pairs - i));
+		var t = numbers[i];
+		numbers[i] = numbers[n];
+		numbers[n] = t;
+	}
 
-	// function shuffledTiles(num) {
-	// 	let tiles = [...Array(144).keys()]
-	// 	for (let k = 0; k < 3; k++)
-	// 	for (let i = tiles.length - 1; i > 0; i--) {
-	// 		const idx = Math.floor(Math.random() * (i + 1));
-	// 		const tmp = tiles[i];
-	// 		tiles[i] = tiles[idx];
-	// 		tiles[idx] = tmp;
-	// 	}
-	// 	return tiles;
-	// }
+	// find_matches_calls = 0;
+
+	shuffle(numbers);
+	// console.log("find_matches_calls: " + find_matches_calls)
+	console.log("shuffle done")
+
+	reset();
+
 
 
 	function mahjong() {
-	
-		// ver 1.01 (2022-10-04 ) - dodano undo
 	
 		// TODO: parametry startowe z lini poleceń, np do wyboru zestawu kloców
 		const params = new URLSearchParams(window.location.search);
@@ -655,20 +583,7 @@
 		div1.style.top = ((window.innerHeight - divHeight) / 2) + "px";
 		div1.style.left = ((window.innerWidth - divWidth) / 2) + "px";
 		
-		// let a1 = shuffledTiles(144)
-		
-		// if(0)
-		// {
-		// 	for(let i = 0; i < tileMap.length; i++) 
-		// 		tileMap[i][6] = i;
-		// 	tileMap.sort(
-		// 		function(a, b) {
-		// 			av = a[0] + 20 * (20 - a[1]) + 400 * a[2]
-		// 			bv = b[0] + 20 * (20 - b[1]) + 400 * b[2]
-		// 			return av - bv;
-		// 		})
-		// }
-
+	
 		// for(let i = 0; i < tileMap.length; i++)
 		for (let i = 0; i < tiles.length; i++)
 		{
@@ -678,9 +593,13 @@
 			// tileMap[i][5] = tiles_obso[a1[i]];
 
 			var tile = tiles[i]
-			var tile_name = tiles_obso[tile.number]
-
-			img1.src = "./tiles/01/" + tile_name + ".png"; //+ ".svg";
+			tile.name = tile_name[Math.trunc(tile.number / 4)]
+			if (tile.name == "s_")
+				tile.name = tile_name_s_floor[tile.number % 4];
+			if (tile.name == "f_")
+				tile.name = tile_name_f_floor[tile.number % 4];
+			
+			img1.src = "./tiles/01/" + tile.name + ".png"; //+ ".svg";
 
 			img1.width = tw;
 			img1.height = th;
@@ -688,23 +607,8 @@
 			img1.id = i;
 			img1.onclick = tileClick;
 			
-			// TODO OFF ??
-			// if(i < 87) {
-			// 	img1.style.zIndex = 100 - i;
-			// }
-			// else if(i < 123) {
-			// 	img1.style.zIndex = 200 - i;
-			// }
-			// else if(i < 139) {
-			// 	img1.style.zIndex = 250 - i;
-			// }
-			// else if(i < 143) {
-			// 	img1.style.zIndex = 300 - i;
-			// }
-			// else {
-			// 	img1.style.zIndex = 301;
-			// }
 			img1.style.zIndex  = tile.slot.layer
+
 			// let offset = tileMap[i][2] * tileSpacing;
 			// img1.style.top = ((tileMap[i][0] * (th - tileSpacing)) - offset) + "px";
 			// img1.style.left = ((tileMap[i][1] * (tw - tileSpacing)) + offset) + "px";
@@ -819,13 +723,15 @@
 		var matches = find_matches();
 		var match_n = matches.length;
 
+		var visible_n = tiles.filter(t => t.visible).length;
+
 		let av = document.getElementById("avail")
 		av.textContent = "moves: " + match_n;
 		console.log("moves left: " + match_n);
 
 		if (match_n == 0)
 		{
-			var msg = avail.left == 0 ? "BRAWO" : "DUPA"
+			var msg = visible_n == 0 ? "BRAWO" : "DUPA"
 			//alert(msg);
 			var div1 = document.getElementById("div1")
 			div1.style.display = "none"
@@ -887,7 +793,7 @@
 	
 	function selectTile(id) {
 	
-		selectedTile = id;
+		selectedTileId = id;
 		var img = document.getElementById("div1").querySelector("img[id='" + id + "']")
 		img.style.animation = "blinking 1s infinite";
 		img.border ="5px solid color blue"
@@ -898,13 +804,13 @@
 	
 	function unselectTile() {
 	
-		if(selectedTile > -1) {
+		if(selectedTileId > -1) {
 		
-			var img = document.getElementById("div1").querySelector("img[id='" + selectedTile + "']")
+			var img = document.getElementById("div1").querySelector("img[id='" + selectedTileId + "']")
 			img.style.animation = null;
 			img.border =""
 			img.style.filter = null;
-			selectedTile = -1;
+			selectedTileId = -1;
 		}
 		
 	}
@@ -949,49 +855,49 @@
 	function tileClick(e) {
 		
 		const id = parseInt(e.currentTarget.id);
-		//let locked = isLocked(id)
 		var tile = tiles[id]
-		var tile_name1 = tiles_obso[tile.number]
 		var locked = !tile_can_move(tile)
 
-		console.log("id " + id + " locked " + locked + " nm " + tile_name1 + "/" + tile.number) //tileMap[id][5]);
+		console.log("id " + id + " locked " + locked + " nm " + tile.name + "/" + tile.number) //tileMap[id][5]);
 
 		if (locked) 
 			return;
 		
 		
-		if(selectedTile == -1) {
+		if(selectedTileId == -1) {
 			selectTile(id);
 		}
 		else {
-			if(selectedTile == id) {
+			if(selectedTileId == id) {
 				unselectTile();
 			}
 			else {
 			
-				//let tile_name1 = tile_name1//tileMap[id][5];
-				//let tileName2 = //tileMap[selectedTile][5];
-				let tile2 = tiles[selectedTile]
-				var tile_name2 = tiles_obso[tile2.number]
-				//if(tileName1 == tileName2 || (tileName1.substring(0,2) == "s_" && tileName2.substring(0,2) == "s_") || (tileName1.substring(0,2) == "f_" && tileName2.substring(0,2) == "f_")) 
-                if (tile_name1.substring(0,2) == tile_name2.substring(0,2))
-                {
+				let tile2 = tiles[selectedTileId]
 				
-					//tileMap[id][5] = "";
-					//tileMap[selectedTile][5] = "";
+				//if(tileName1 == tileName2 || (tileName1.substring(0,2) == "s_" && tileName2.substring(0,2) == "s_") || (tileName1.substring(0,2) == "f_" && tileName2.substring(0,2) == "f_")) 
+                //if (tile.name.substring(0,2) == tile2.name.substring(0,2))
+				if (tile.matches(tile2))
+                {
+					// if (!tile.matches(tile2))
+					// 	console.log("!matches() !!! ***");
 					tile.visible = false;
 					tile2.visible = false;
 
-					document.getElementById("div1").querySelector("img[id='" + selectedTile + "']").style.display = "none";
+					document.getElementById("div1").querySelector("img[id='" + selectedTileId + "']").style.display = "none";
 					document.getElementById("div1").querySelector("img[id='" + id + "']").style.display = "none";
 					
 					undo.push(id);
-					undo.push(tile_name1);
-					undo.push(selectedTile);
-					undo.push(tile_name2);
+					undo.push(tile.name);
+					undo.push(selectedTileId);
+					undo.push(tile2.name);
 					
 					unselectTile();
 					checkAvailableMoves();
+				}
+				else if (tile.name.substring(0,2) == tile2.name.substring(0,2))
+				{
+					console.log("CODE ERROR !!! matches() vs names ***");
 				}
 			}
 		}
