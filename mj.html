@@ -417,7 +417,7 @@
 	// console.log("find_matches_calls: " + find_matches_calls)
 	console.log("shuffle done")
 
-	
+	reset();
 
 	function shuffle(numbers, depth = 0)
 	{
@@ -569,6 +569,21 @@
 		return true;
     }
 	
+    function reset()
+    {
+        //reset_clock();
+        move_number = 1;
+        selected_tile = null;
+        // set_hint (null, null);
+        // foreach (var tile in tiles)
+		tiles.forEach(tile =>
+        {
+            tile.visible = true;
+            tile.move_number = 0;
+        })
+        // redraw_all_tiles ();
+    }
+
 	// *********** TODO				
 
 
@@ -798,8 +813,32 @@
 		return { tiles: Object.entries(tiles), left };
 	}
 
-	
-	function checkAvailableMoves() {
+
+	function checkAvailableMoves()
+	{
+		var matches = find_matches();
+		var match_n = matches.length;
+
+		let av = document.getElementById("avail")
+		av.textContent = "moves: " + match_n;
+		console.log("moves left: " + match_n);
+
+		if (match_n == 0)
+		{
+			var msg = avail.left == 0 ? "BRAWO" : "DUPA"
+			//alert(msg);
+			var div1 = document.getElementById("div1")
+			div1.style.display = "none"
+			gameOver = document.getElementById("gameOver");
+			gameOver.textContent = msg
+			gameOver.style.display = "block"
+			gameOver.style.top = (window.innerHeight - gameOver.offsetHeight) *.5  + "px";
+			gameOver.style.left = (window.innerWidth - gameOver.offsetWidth) * .5 + "px";
+		}
+	}
+
+
+	function checkAvailableMoves_obso() {
 	
 		avail = getAvailableMoves() 
 		
@@ -829,7 +868,6 @@
 		console.log("pozostało ruchów: " + count);
 		//console.log("pozostało kloców: " + tilesLeft);
 
-		// TODO temp OFF
 		if (false && count == 0)
 		{
 			var msg = avail.left == 0 ? "BRAWO" : "DUPA"
