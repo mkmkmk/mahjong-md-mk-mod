@@ -57,14 +57,296 @@
 
 <script type="text/javascript">
 
+	class Slot
+	{
+		constructor(x, y, layer)
+		{
+			this.x = x;
+			this.y = y;
+			this.layer = layer
+		}
+		equals(slot)
+        {
+			return slot.x == this.x && slot.y == this.y && slot.layer == this.layer;
+		}
+	}
+
+	function compare_slots (a, b)
+	{
+		/* Sort lowest to highest */
+		var dl = a.layer - b.layer;
+		if (dl != 0)
+			return dl;
+
+		/* Sort diagonally, top left to bottom right */
+		var dx = a.x - b.x;
+		var dy = a.y - b.y;
+		if (dx > dy)
+			return -1;
+		if (dx < dy)
+			return 1;
+
+		return 0;
+	}
+
+	class Map
+	{
+		constructor()
+		{
+			this.slots = [];
+		}
+
+
+		static test()
+		{
+			var res = new Map()
+			res.slots.push (new Slot (0, 0, 0));
+			res.slots.push (new Slot (2, 0, 0));
+			res.slots.push (new Slot (2, 0, 1));
+			res.slots.push (new Slot (4, 0, 0));
+			res.slots.push (new Slot (0, 2, 0));
+			res.slots.push (new Slot (2, 2, 0));
+			res.slots.push (new Slot (2, 2, 1));
+			res.slots.push (new Slot (4, 2, 0));
+			return res;
+		}
+
+		static easy()
+		{
+			var res = new Map()
+			res.slots.push (new Slot (13, 7, 4));
+			res.slots.push (new Slot (12, 8, 3));
+			res.slots.push (new Slot (14, 8, 3));
+			res.slots.push (new Slot (12, 6, 3));
+			res.slots.push (new Slot (14, 6, 3));
+			res.slots.push (new Slot (10, 10, 2));
+			res.slots.push (new Slot (12, 10, 2));
+			res.slots.push (new Slot (14, 10, 2));
+			res.slots.push (new Slot (16, 10, 2));
+			res.slots.push (new Slot (10, 8, 2));
+			res.slots.push (new Slot (12, 8, 2));
+			res.slots.push (new Slot (14, 8, 2));
+			res.slots.push (new Slot (16, 8, 2));
+			res.slots.push (new Slot (10, 6, 2));
+			res.slots.push (new Slot (12, 6, 2));
+			res.slots.push (new Slot (14, 6, 2));
+			res.slots.push (new Slot (16, 6, 2));
+			res.slots.push (new Slot (10, 4, 2));
+			res.slots.push (new Slot (12, 4, 2));
+			res.slots.push (new Slot (14, 4, 2));
+			res.slots.push (new Slot (16, 4, 2));
+			res.slots.push (new Slot (8, 12, 1));
+			res.slots.push (new Slot (10, 12, 1));
+			res.slots.push (new Slot (12, 12, 1));
+			res.slots.push (new Slot (14, 12, 1));
+			res.slots.push (new Slot (16, 12, 1));
+			res.slots.push (new Slot (18, 12, 1));
+			res.slots.push (new Slot (8, 10, 1));
+			res.slots.push (new Slot (10, 10, 1));
+			res.slots.push (new Slot (12, 10, 1));
+			res.slots.push (new Slot (14, 10, 1));
+			res.slots.push (new Slot (16, 10, 1));
+			res.slots.push (new Slot (18, 10, 1));
+			res.slots.push (new Slot (8, 8, 1));
+			res.slots.push (new Slot (10, 8, 1));
+			res.slots.push (new Slot (12, 8, 1));
+			res.slots.push (new Slot (14, 8, 1));
+			res.slots.push (new Slot (16, 8, 1));
+			res.slots.push (new Slot (18, 8, 1));
+			res.slots.push (new Slot (8, 6, 1));
+			res.slots.push (new Slot (10, 6, 1));
+			res.slots.push (new Slot (12, 6, 1));
+			res.slots.push (new Slot (14, 6, 1));
+			res.slots.push (new Slot (16, 6, 1));
+			res.slots.push (new Slot (18, 6, 1));
+			res.slots.push (new Slot (8, 4, 1));
+			res.slots.push (new Slot (10, 4, 1));
+			res.slots.push (new Slot (12, 4, 1));
+			res.slots.push (new Slot (14, 4, 1));
+			res.slots.push (new Slot (16, 4, 1));
+			res.slots.push (new Slot (18, 4, 1));
+			res.slots.push (new Slot (8, 2, 1));
+			res.slots.push (new Slot (10, 2, 1));
+			res.slots.push (new Slot (12, 2, 1));
+			res.slots.push (new Slot (14, 2, 1));
+			res.slots.push (new Slot (16, 2, 1));
+			res.slots.push (new Slot (18, 2, 1));
+			res.slots.push (new Slot (2, 14, 0));
+			res.slots.push (new Slot (4, 14, 0));
+			res.slots.push (new Slot (6, 14, 0));
+			res.slots.push (new Slot (8, 14, 0));
+			res.slots.push (new Slot (10, 14, 0));
+			res.slots.push (new Slot (12, 14, 0));
+			res.slots.push (new Slot (14, 14, 0));
+			res.slots.push (new Slot (16, 14, 0));
+			res.slots.push (new Slot (18, 14, 0));
+			res.slots.push (new Slot (20, 14, 0));
+			res.slots.push (new Slot (22, 14, 0));
+			res.slots.push (new Slot (24, 14, 0));
+			res.slots.push (new Slot (6, 12, 0));
+			res.slots.push (new Slot (8, 12, 0));
+			res.slots.push (new Slot (10, 12, 0));
+			res.slots.push (new Slot (12, 12, 0));
+			res.slots.push (new Slot (14, 12, 0));
+			res.slots.push (new Slot (16, 12, 0));
+			res.slots.push (new Slot (18, 12, 0));
+			res.slots.push (new Slot (20, 12, 0));
+			res.slots.push (new Slot (4, 10, 0));
+			res.slots.push (new Slot (6, 10, 0));
+			res.slots.push (new Slot (8, 10, 0));
+			res.slots.push (new Slot (10, 10, 0));
+			res.slots.push (new Slot (12, 10, 0));
+			res.slots.push (new Slot (14, 10, 0));
+			res.slots.push (new Slot (16, 10, 0));
+			res.slots.push (new Slot (18, 10, 0));
+			res.slots.push (new Slot (20, 10, 0));
+			res.slots.push (new Slot (22, 10, 0));
+			res.slots.push (new Slot (0, 7, 0));
+			res.slots.push (new Slot (2, 8, 0));
+			res.slots.push (new Slot (4, 8, 0));
+			res.slots.push (new Slot (6, 8, 0));
+			res.slots.push (new Slot (8, 8, 0));
+			res.slots.push (new Slot (10, 8, 0));
+			res.slots.push (new Slot (12, 8, 0));
+			res.slots.push (new Slot (14, 8, 0));
+			res.slots.push (new Slot (16, 8, 0));
+			res.slots.push (new Slot (18, 8, 0));
+			res.slots.push (new Slot (20, 8, 0));
+			res.slots.push (new Slot (22, 8, 0));
+			res.slots.push (new Slot (24, 8, 0));
+			res.slots.push (new Slot (2, 6, 0));
+			res.slots.push (new Slot (4, 6, 0));
+			res.slots.push (new Slot (6, 6, 0));
+			res.slots.push (new Slot (8, 6, 0));
+			res.slots.push (new Slot (10, 6, 0));
+			res.slots.push (new Slot (12, 6, 0));
+			res.slots.push (new Slot (14, 6, 0));
+			res.slots.push (new Slot (16, 6, 0));
+			res.slots.push (new Slot (18, 6, 0));
+			res.slots.push (new Slot (20, 6, 0));
+			res.slots.push (new Slot (22, 6, 0));
+			res.slots.push (new Slot (24, 6, 0));
+			res.slots.push (new Slot (4, 4, 0));
+			res.slots.push (new Slot (6, 4, 0));
+			res.slots.push (new Slot (8, 4, 0));
+			res.slots.push (new Slot (10, 4, 0));
+			res.slots.push (new Slot (12, 4, 0));
+			res.slots.push (new Slot (14, 4, 0));
+			res.slots.push (new Slot (16, 4, 0));
+			res.slots.push (new Slot (18, 4, 0));
+			res.slots.push (new Slot (20, 4, 0));
+			res.slots.push (new Slot (22, 4, 0));
+			res.slots.push (new Slot (6, 2, 0));
+			res.slots.push (new Slot (8, 2, 0));
+			res.slots.push (new Slot (10, 2, 0));
+			res.slots.push (new Slot (12, 2, 0));
+			res.slots.push (new Slot (14, 2, 0));
+			res.slots.push (new Slot (16, 2, 0));
+			res.slots.push (new Slot (18, 2, 0));
+			res.slots.push (new Slot (20, 2, 0));
+			res.slots.push (new Slot (2, 0, 0));
+			res.slots.push (new Slot (4, 0, 0));
+			res.slots.push (new Slot (6, 0, 0));
+			res.slots.push (new Slot (8, 0, 0));
+			res.slots.push (new Slot (10, 0, 0));
+			res.slots.push (new Slot (12, 0, 0));
+			res.slots.push (new Slot (14, 0, 0));
+			res.slots.push (new Slot (16, 0, 0));
+			res.slots.push (new Slot (18, 0, 0));
+			res.slots.push (new Slot (20, 0, 0));
+			res.slots.push (new Slot (22, 0, 0));
+			res.slots.push (new Slot (24, 0, 0));
+			res.slots.push (new Slot (26, 7, 0));
+			res.slots.push (new Slot (28, 7, 0));
+			return res;
+	        }
+
+                width()
+                {
+                    var w = 0;
+			        this.slots.forEach(
+			        slot =>
+			        {
+			            if (slot.x > w)
+                            w = slot.x;
+			        });
+                    return w + 2;
+                }
+
+	        height()
+                {
+                    var h = 0;
+			        this.slots.forEach(
+			        slot =>
+			        {
+			            if (slot.y > h)
+                            h = slot.y;
+			        });
+                    return h + 2;
+                }
+	}
+
+	class Tile
+	{
+		constructor(slot)
+		{
+			this.number = 0;
+			this.slot = slot;
+			this.visible = true
+			this.move_number = 0;
+		}
+
+		set()
+                {
+			return Math.trunc(this.number / 4);
+		}
+
+		matches(tile)
+                {
+			return tile.set() == this.set();
+		}
+
+		equals(tile)
+                {
+			return tile.slot.equals(this.slot);
+		}
+	}
+
 	
+	function compare_tiles(a, b)
+	{
+		return compare_slots (a.slot, b.slot);
+	}
+
+	function switch_tiles(a, b)
+	{
+		if (a.visible && b.visible)
+		{
+			var h = a.slot;
+			a.slot = b.slot;
+			b.slot = h;
+			return true;
+		}
+		return false;
+	}
+
+	class Match
+	{
+		constructor(tile0, tile1)
+		{
+		        this.tile0 = tile0;
+			this.tile1 = tile1;
+		}
+	}
+
+
 	let tw = 100;
 	let th = 120;
 	let tileSpacing = 13;
 	
 	let selectedTile = -1;
 	
-	const tiles = [
+	const tiles_obso = [
 		"b1","b2","b3","b4","b5","b6","b7","b8","b9",
 		"b1","b2","b3","b4","b5","b6","b7","b8","b9",
 		"b1","b2","b3","b4","b5","b6","b7","b8","b9",
@@ -88,37 +370,207 @@
 		"s_sp", "s_su", "s_a", "s_w",
 		"f_p", "f_o", "f_c", "f_b"
 	];
-		
-		
-		/*
-		0-11
-		12-19
-		20-29
-		30
-		31-42
-		43-54
-		55,56
-		57-66
-		67-74
-		75-86
-		---
-		87-92
-		93-98
-		99-104
-		105-110
-		111-116
-		117-122
-		---
-		123-126
-		127-130
-		131-134
-		135-138
-		
-		*/
-		
+	
     let showAv = 0;
 	let undo = [];
+
 	
+	// *************  Game 
+	var map = Map.easy()
+	// var map = Map.test()
+
+	console.log(map.width())
+	console.log(map.height())
+
+	var tiles = []
+	move_number = 1;	
+
+	map.slots.forEach(
+		slot => 
+		{
+			var tile = new Tile(slot);
+			tile.number = 0;
+			tiles.push(tile)
+		});
+	tiles.sort(compare_tiles)
+	
+	// var tx = tiles[5];
+	// tx.number = 5;
+
+	var n_pairs = tiles.length / 2;
+	var numbers = new Array(n_pairs);
+	for (var i = 0; i < n_pairs; i++)
+		numbers[i] = i * 2;
+	for (var i = 0; i < n_pairs; i++)
+	{
+		//var n = Random.int_range (i, n_pairs);
+		var n = i + Math.trunc(Math.random() * (n_pairs - i));
+		var t = numbers[i];
+		numbers[i] = numbers[n];
+		numbers[n] = t;
+	}
+
+	// find_matches_calls = 0;
+
+	shuffle(numbers);
+	// console.log("find_matches_calls: " + find_matches_calls)
+	console.log("shuffle done")
+
+	
+
+	function shuffle(numbers, depth = 0)
+	{
+		// console.log("depth:", depth)
+		if (depth == tiles.length  / 2)
+			return true;
+	
+		// console.log("----------------------------")
+		var matches = find_matches();
+        var n_matches = matches.length;
+        
+		/* No matches on this branch, rewind */
+        if (n_matches == 0)
+            return false;
+
+		//var n = Random.int_range (0, (int) n_matches);
+		var n = Math.trunc(Math.random() * n_matches);
+		for (var i = 0; i < n_matches; i++)
+		{
+            //var match = matches.nth_data ((n + i) % n_matches);
+			var match = matches[(n + i) % n_matches];
+            match.tile0.number = numbers[depth];
+            match.tile0.visible = false;
+            match.tile1.number = numbers[depth] + 1;
+            match.tile1.visible = false;
+
+            if (shuffle (numbers, depth + 1))
+                return true;
+
+            /* Undo this move */
+            match.tile0.number = 0;
+            match.tile0.visible = true;
+            match.tile1.number = 0;
+            match.tile1.visible = true;
+        }
+		
+		return false;
+	}
+
+
+
+	function find_matches(tile = null)
+	{
+		// find_matches_calls++;
+		var matches = []
+		if (tile != null && !tile_can_move(tile))
+		{
+			// console.log("return #1 matches num: "+ matches.length);
+            return matches;
+		}
+
+		if (tile == null)
+        {
+            //foreach (var t in tiles)
+			tiles.forEach(t =>
+            {
+                // foreach (var match in find_matches (t))
+				if (t == null)
+					console.log("CODE ERROR")
+				var fm = find_matches(t)
+				fm.forEach(match => 
+                {
+                    already_matched = false;
+                    // foreach (var existing_match in matches)
+					matches.every(existing_match =>
+                    {
+                        // if (existing_match.tile0 == match.tile1 && existing_match.tile1 == match.tile0)
+						if (existing_match.tile0.equals(match.tile0) && existing_match.tile1.equals(match.tile1) 
+					     || existing_match.tile0.equals(match.tile1) && existing_match.tile1.equals(match.tile0)
+					       )
+                        {
+                            already_matched = true;
+                            return false;
+                        }
+						return true;
+                    })
+
+                    if (!already_matched)
+                        matches.push(match);
+                })
+            })
+        }
+        else
+        {
+            //foreach (var t in tiles)
+			tiles.every(t =>
+            {
+                if (t == tile || !tile_can_move(t))
+                    return true
+
+                if (t.matches(tile))
+                    matches.push(new Match(t, tile));
+				return true
+            })
+        }
+		// if (tile == null)
+		//  	console.log("out: return #2 matches num: "+ matches.length);
+        return matches;
+	}
+
+
+	function tile_can_move(tile)
+    {
+        if (!tile.visible)
+            return false;
+
+        var blocked_left = false;
+        var blocked_right = false;
+        var slot = tile.slot;
+		//var result = true;
+        //foreach (var t in tiles)
+		//tiles.every(t =>
+		for (var i = 0; i < tiles.length; i++)
+        {
+			t = tiles[i];
+
+			if (t == tile || !t.visible)
+				continue;
+                //return true;
+
+			var s = t.slot;
+
+			/* Can't move if blocked by a tile above */
+			if (s.layer == slot.layer + 1 &&
+				(s.x >= slot.x - 1 && s.x <= slot.x + 1) &&
+				(s.y >= slot.y - 1 && s.y <= slot.y + 1))
+				{
+					//result = false;
+					return false;
+				}
+
+			/* Can't move if blocked both on the left and the right */
+			if (s.layer == slot.layer && (s.y >= slot.y - 1 && s.y <= slot.y + 1))
+			{
+				if (s.x == slot.x - 2)
+					blocked_left = true;
+				if (s.x == slot.x + 2)
+					blocked_right = true;
+				if (blocked_left && blocked_right)
+				{
+					//result = false;
+					return false;
+				}
+			}
+			//return true;
+        }//)
+
+        //return result;
+		return true;
+    }
+	
+	// *********** TODO				
+
+
 	let tileMap = [
 	
 		[7,1,0,-1,[],""], [7,2,0,-1,[0,2],""], [7,3,0,-1,[1,3],""], [7,4,0,-1,[2,4],""], [7,5,0,-1,[3,5],""], [7,6,0,-1,[4,6],""], [7,7,0,-1,[5,7],""], [7,8,0,-1,[6,8],""], [7,9,0,-1,[7,9],""], [7,10,0,-1,[8,10],""], [7,11,0,-1,[9,11],""], [7,12,0,-1,[],""], 
@@ -155,7 +607,19 @@
 		
 	];
 			
-	
+
+	function shuffledTiles(num) {
+		let tiles = [...Array(144).keys()]
+		for (let k = 0; k < 3; k++)
+		for (let i = tiles.length - 1; i > 0; i--) {
+			const idx = Math.floor(Math.random() * (i + 1));
+			const tmp = tiles[i];
+			tiles[i] = tiles[idx];
+			tiles[idx] = tmp;
+		}
+		return tiles;
+	}
+
 
 	function mahjong() {
 	
@@ -175,15 +639,8 @@
 		div1.style.top = ((window.innerHeight - divHeight) / 2) + "px";
 		div1.style.left = ((window.innerWidth - divWidth) / 2) + "px";
 		
-		let a1 = [];
-		for(let i = 0; i < 144; i++) {
-			a1.push(i);
-		}
+		let a1 = shuffledTiles(144)
 		
-		// sortowanie kloców, trzy razy, bo jeden raz działa słabo, ale i tak działa dziwnie
-		for(let i = 0; i < 10; i++) 
-			a1.sort(function () {return Math.random() - 0.5;});
-					
 		if(0)
 		{
 			for(let i = 0; i < tileMap.length; i++) 
@@ -199,8 +656,8 @@
 		for(let i = 0; i < tileMap.length; i++) {
 			
 			let img1 = new Image();
-			img1.src = "./tiles/01/" + tiles[a1[i]] + ".png"; //+ ".svg";			
-			tileMap[i][5] = tiles[a1[i]];
+			img1.src = "./tiles/01/" + tiles_obso[a1[i]] + ".png"; //+ ".svg";			
+			tileMap[i][5] = tiles_obso[a1[i]];
 			img1.width = tw;
 			img1.height = th;
 			img1.style.position = "absolute";
@@ -282,52 +739,58 @@
 				return resArray;
 			};
 
-	function checkAvailableMoves() {
-	
-		let tiles = {};
-		let tilesId = [];
-		let tilesLeft = 0;
+
+	function getAvailableMoves() {
 		
+		let tiles = {};
+		let left = 0;
+
 		for(let i = 0; i < tileMap.length; i++) {
-			
-			
+						
 			// kasuje podświetlenie dostępnych ruchów
 			/*
 			let img = document.getElementById("div1").querySelector("img[id='" + i + "']");
 			img.style.filter = null;
 			*/
 			
-			
 			let tileName = tileMap[i][5];
 			
-			if(tileName != "") {
-			
-				tilesLeft++;
-				if(!isLocked(i)) {
+			if (tileName != "") {
 				
-					if(tileName.substring(1,2) == "_") { 
-						tileName = tileName.substring(0,2); 
+				left++;
+				if (!isLocked(i)) {
+					
+					if (tileName.substring(1,2) == "_") { 
+						tileName = tileName.substring(0, 2); 
 					}
-					if(tiles[tileName] != null) {
+					if (tiles[tileName] != null) {
 						tiles[tileName].push(i);
 					}
 					else {
 						tiles[tileName] = [i];
 					}
-	 	 	 	 	// kolorowanie odblokowanych
-	 	 	 	 	if (0)
-	 	 	 	 	{
+					// kolorowanie odblokowanych
+					if (0)
+					{
 						let img = document.getElementById("div1").querySelector("img[id='" + i +"']");
 						img.style.filter = "brightness(.7)";
-	 	 	 	 	}
-
+					}
+					
 				}
 			}
 		}
+
+		return { tiles: Object.entries(tiles), left };
+	}
+
+	
+	function checkAvailableMoves() {
+	
+		avail = getAvailableMoves() 
 		
 		let count = 0;
 
-		for (const [key, value] of Object.entries(tiles)) {
+		for (const [key, value] of avail.tiles) {
 			if(value.length > 1) {
 
 				count += value.length == 4 ? 2 : 1;
@@ -353,7 +816,7 @@
 
 		if (count == 0)
 		{
-			var msg = tilesLeft == 0 ? "BRAWO" : "DUPA"
+			var msg = avail.left == 0 ? "BRAWO" : "DUPA"
 			//alert(msg);
 			var div1 = document.getElementById("div1")
 			div1.style.display = "none"
