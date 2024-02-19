@@ -631,7 +631,15 @@
 		let av = document.getElementById("avail")
 		av.textContent = "moves: " + match_n;
 		console.log("moves left: " + match_n);
-		
+
+		for (let i = 0; i < tiles.length; i++)
+		{
+			let img = getImage(i);
+			img.style.animation = null;
+			img.border = "";
+			img.style.filter = null;
+		}
+
 		if (showAv)
 		{
 			let randMatch = matches[Math.floor(Math.random() * matches.length)];
