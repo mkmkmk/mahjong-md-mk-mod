@@ -294,7 +294,7 @@
 			this.name = "";
 			this.slot = slot;
 			this.visible = true
-			this.move_number = 0;
+			this.id = -1;
 		}
 
 		set()
@@ -489,14 +489,13 @@
 		return true;
     }
 	
+
     function reset()
     {
-        move_number = 1;
         selected_tile = null;
 		tiles.forEach(tile =>
         {
             tile.visible = true;
-            tile.move_number = 0;
         })
     }
 
@@ -525,7 +524,7 @@
 	const tile_name_f_floor =
 	    ["f_p", "f_o", "f_c", "f_b"]
 
-    let showAv = 0;
+
 	let undo = [];
 	
 	// *************  Game 
@@ -533,8 +532,6 @@
 	// var map = Map.test()
 	
 	var tiles = []
-	move_number = 1;	
-
 
 	function mahjong() {
 	
@@ -548,7 +545,9 @@
 				tiles.push(tile)
 			});
 		tiles.sort(compare_tiles)
-		
+		for (var id = 0; id < tiles.length; id++)
+			tiles[id].id = id;
+
 		var n_pairs = tiles.length / 2;
 		var numbers = new Array(n_pairs);
 		for (var i = 0; i < n_pairs; i++)
@@ -615,8 +614,8 @@
 	
 	}
 
-
-	function checkAvailableMoves()
+	
+	function checkAvailableMoves(showAv = false)
 	{
 		var matches = find_matches();
 		var match_n = matches.length;
@@ -626,35 +625,23 @@
 		let av = document.getElementById("avail")
 		av.textContent = "moves: " + match_n;
 		console.log("moves left: " + match_n);
-
-		// kasuje podświetlenie dostępnych ruchów
-		// for (let i = 0; i < tileMap.length; i++) {
-		// let img = document.getElementById("div1").querySelector("img[id='" + i + "']");
-		// img.style.filter = null;
-
-		// for (const [key, value] of avail.tiles) {
-		// 	if(value.length > 1) {
-
-		// 		count += value.length == 4 ? 2 : 1;
-
-		// 		// podświetla dostępne ruchy - tylko dla miękiszonów
-		// 		if (showAv > 0)
-		// 		{
-		// 			value.forEach(i => {
-		// 				let img = document.getElementById("div1").querySelector("img[id='" + i +"']");
-		// 				img.style.filter = "brightness(.7)";
-		// 				img.border ="5px solid color blue"
-		// 				img.style.borderColor = "blue";
-		// 			})
-		// 			showAv = 0;
-		// 		}
-		// 	}
-		// }
-
+		
+		if (showAv)
+		{
+			let randMatch = matches[Math.floor(Math.random() * matches.length)];
+			[randMatch.tile0.id, randMatch.tile1.id]
+				.forEach(i=>
+				{
+					let img = document.getElementById("div1").querySelector("img[id='" + i +"']");
+					img.style.filter = "brightness(.7)";
+					img.border ="5px solid color blue"
+					img.style.borderColor = "blue";
+				});
+		}
+		
 		if (match_n == 0)
 		{
 			var msg = visible_n == 0 ? "BRAWO" : "DUPA"
-			//alert(msg);
 			var div1 = document.getElementById("div1")
 			div1.style.display = "none"
 			gameOver = document.getElementById("gameOver");
@@ -692,8 +679,7 @@
 
 	function showAvail() 
     {
-        showAv = 1;
-        checkAvailableMoves();
+        checkAvailableMoves(true);
     }	
 
 
@@ -706,16 +692,11 @@
 			gameOver = document.getElementById("gameOver");
 			gameOver.style.display = "none"
 
-			// const tileName2 = undo.pop();
 			const id2 = undo.pop();
-			// const tileName1 = undo.pop();
 			const id1 = undo.pop();
 			document.getElementById("div1").querySelector("img[id='" + id1 + "']").style.display = "block";
-			//tileMap[id1][5] = tileName1;
 			tiles[id1].visible = true;
-
 			document.getElementById("div1").querySelector("img[id='" + id2 + "']").style.display = "block";
-			//tileMap[id2][5] = tileName2;
 			tiles[id2].visible = true;
 			
 			unselectTile();
