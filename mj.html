@@ -614,6 +614,12 @@
 	
 	}
 
+
+	function getImage(id)
+	{
+		return document.getElementById("div1").querySelector("img[id='" + id +"']");
+	}
+
 	
 	function checkAvailableMoves(showAv = false)
 	{
@@ -632,7 +638,7 @@
 			[randMatch.tile0.id, randMatch.tile1.id]
 				.forEach(i=>
 				{
-					let img = document.getElementById("div1").querySelector("img[id='" + i +"']");
+					let img = getImage(i);
 					img.style.filter = "brightness(.7)";
 					img.border ="5px solid color blue"
 					img.style.borderColor = "blue";
@@ -656,7 +662,7 @@
 	function selectTile(id) {
 	
 		selectedTileId = id;
-		var img = document.getElementById("div1").querySelector("img[id='" + id + "']")
+		var img = getImage(id)
 		img.style.animation = "blinking 1s infinite";
 		img.border ="5px solid color blue"
 		img.style.borderColor = "blue";
@@ -667,7 +673,7 @@
 	
 		if(selectedTileId > -1) {
 		
-			var img = document.getElementById("div1").querySelector("img[id='" + selectedTileId + "']")
+			var img = getImage(selectedTileId)
 			img.style.animation = null;
 			img.border =""
 			img.style.filter = null;
@@ -694,9 +700,9 @@
 
 			const id2 = undo.pop();
 			const id1 = undo.pop();
-			document.getElementById("div1").querySelector("img[id='" + id1 + "']").style.display = "block";
+			getImage(id1).style.display = "block";
 			tiles[id1].visible = true;
-			document.getElementById("div1").querySelector("img[id='" + id2 + "']").style.display = "block";
+			getImage(id2).style.display = "block";
 			tiles[id2].visible = true;
 			
 			unselectTile();
@@ -734,8 +740,8 @@
 					tile.visible = false;
 					tile2.visible = false;
 
-					document.getElementById("div1").querySelector("img[id='" + selectedTileId + "']").style.display = "none";
-					document.getElementById("div1").querySelector("img[id='" + id + "']").style.display = "none";
+					getImage(selectedTileId).style.display = "none";
+					getImage(id).style.display = "none";
 					
 					undo.push(id);
 					undo.push(selectedTileId);
