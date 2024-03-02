@@ -531,7 +531,9 @@
 
 
 	let undo = [];
-	
+
+	window.ondragstart = () => false;
+
 	// *************  Game 
 	let map = Map.classic()
 	// let map = Map.test()
@@ -603,6 +605,7 @@
 			img1.width = tw;
 			img1.height = th;
 			img1.style.position = "absolute";
+			img1.style.userSelect = "none";
 			img1.id = i;
 			img1.onclick = tileClick;
 			
