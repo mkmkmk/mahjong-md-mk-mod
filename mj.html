@@ -768,6 +768,9 @@
 				else if (tile.name.substring(0,2) == tile2.name.substring(0,2))
 				{
 					console.log("CODE ERROR !!! matches() vs names ***");
+				}else{
+					unselectTile();
+					selectTile(id);
 				}
 			}
 		}
