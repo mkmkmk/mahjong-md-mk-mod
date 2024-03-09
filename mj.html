@@ -705,26 +705,34 @@
     }	
 
 
-	function undoLastMove() {
+	function undoLastMove()
+	{
 		
-		if(undo.length > 0) {
+		if (undo.length == 0)
+		    return false;
 		
-			let div1 = document.getElementById("div1")
-			div1.style.display = "block"
-			gameOver = document.getElementById("gameOver");
-			gameOver.style.display = "none"
+		let div1 = document.getElementById("div1")
+		div1.style.display = "block"
+		gameOver = document.getElementById("gameOver");
+		gameOver.style.display = "none"
 
-			const id2 = undo.pop();
-			const id1 = undo.pop();
-			getImage(id1).style.display = "block";
-			tiles[id1].visible = true;
-			getImage(id2).style.display = "block";
-			tiles[id2].visible = true;
-			
-			unselectTile();
-			checkAvailableMoves();
-		}
+		const id2 = undo.pop();
+		const id1 = undo.pop();
+		getImage(id1).style.display = "block";
+		tiles[id1].visible = true;
+		getImage(id2).style.display = "block";
+		tiles[id2].visible = true;
 		
+		unselectTile();
+		checkAvailableMoves();
+
+		return true;
+	}
+
+
+	function restart()
+	{
+		while (undoLastMove());
 	}
 	
 	
@@ -806,6 +814,7 @@
 
 <button onclick="toggleFullScreen()">full screen</button>
 <button onclick="undoLastMove()">undo</button>
+<button onclick="restart()">restart</button>
 <button onclick="showAvail()">show</button>
 <div id="avail">***</div>
 <div id="div1"></div>
